@@ -65,7 +65,7 @@ def get_recent_activites(activities, start_date):
 
     return activities.loc[activities['recent'] == 'true']
 
-def date_distance_csv (activities):
+def create_date_distance_csv (activities):
     cols = ['distance', 'start_date_local' ]
     date_distance = activities[cols] 
     date_distance = date_distance.pivot_table(columns='start_date_local', values='distance', aggfunc="sum")
@@ -89,7 +89,7 @@ def main ():
 
     print(recent_activities.iloc[:,:-1])
 
-    date_distance_csv(recent_activities)
+    create_date_distance_csv(recent_activities)
 
 if __name__ == "__main__":
     main()
