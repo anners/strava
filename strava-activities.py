@@ -74,7 +74,7 @@ def date_distance_csv (activities):
     date_distance.to_csv('date-distance.csv')
 
 def main ():
-    # to get this info read ttps://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
+    # to get this info read https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
     client_id = os.getenv("CLIENT_ID")
     client_secret = os.getenv("CLIENT_SECRET")
 
