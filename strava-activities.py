@@ -1,5 +1,5 @@
 # this is a script to print out strava activites after a certain date 
-# I created this for a work running challenge b/c I didn't want to manually update a spreadsheet 
+# I created this for a work running challenge b/c I didn't want to manually update a spreadsheet -- so it also creates a csv
 # this was heavily influnced by the work Matt Ambrogi https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
 import os
 import numpy as np
@@ -62,12 +62,19 @@ def update_activity_table(activities):
 def get_recent_activites(activities, start_date): 
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date() 
     activities['recent'] = np.where(activities['start_date_local'] > start_date, 'true', 'false')
-    #print(activities['recent'])
 
     return activities.loc[activities['recent'] == 'true']
-    
 
-def main (): 
+def date_distance_csv (activities):
+    cols = ['distance', 'start_date_local' ]
+    date_distance = activities[cols] 
+    date_distance = date_distance.pivot_table(columns='start_date_local', values='distance', aggfunc="sum")
+    #print(date_distance)
+    #create a csv file
+    date_distance.to_csv('date-distance.csv')
+
+def main ():
+    # to get this info read ttps://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
     client_id = os.getenv("CLIENT_ID")
     client_secret = os.getenv("CLIENT_SECRET")
 
@@ -81,8 +88,8 @@ def main ():
     recent_activities = get_recent_activites(activities, '2023-11-01')
 
     print(recent_activities.iloc[:,:-1])
-    #recent_activities.to_csv('out.csv')
 
+    date_distance_csv(recent_activities)
 
 if __name__ == "__main__":
     main()
