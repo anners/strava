@@ -36,7 +36,7 @@ def get_strava_activities(access_token):
     activities = pd.json_normalize(my_dataset)
     return activities
 
-def update_activity_table(activities, start_date):
+def update_activity_table(activities):
     # restricted to the columns we care about 
     cols = ['distance', 'start_date_local' ]
     activities = activities[cols]
@@ -50,14 +50,16 @@ def update_activity_table(activities, start_date):
     activities['distance'] = (activities['distance'] / 1609)
     activities['distance'] = np.trunc(100 * activities['distance']) / 100 
 
+    return activities
+    
+
+def create_date_distance_csv (activities, start_date):
     #get activites for a date range
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date() 
-    activities['recent'] = np.where(activities['start_date_local'] > start_date, 'true', 'false')
+    activities['recent'] = np.where(activities['start_date_local'] >= start_date, 'true', 'false')
     
-    return activities.loc[activities['recent'] == 'true']
-
-def create_date_distance_csv (activities):
-    date_distance = activities.pivot_table(columns='start_date_local', values='distance', aggfunc="sum")
+    date_distance = activities.loc[activities['recent'] == 'true']
+    date_distance = date_distance.pivot_table(columns='start_date_local', values='distance', aggfunc="sum")
     #print(date_distance)
     #create a csv file
     date_distance.to_csv('date-distance.csv')
@@ -72,11 +74,11 @@ def main ():
 
     activities = get_strava_activities(access_token)
 
-    recent_activities = update_activity_table(activities, '2023-11-01')
+    recent_activities = update_activity_table(activities, )
 
-    print(recent_activities.iloc[:,:-1])
+    #print(recent_activities.iloc[:,:-1])
 
-    create_date_distance_csv(recent_activities)
+    create_date_distance_csv(recent_activities, '2023-11-23')
 
 if __name__ == "__main__":
     main()
