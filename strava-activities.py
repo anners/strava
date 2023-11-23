@@ -10,12 +10,12 @@ import pandas as pd
 pd.options.mode.chained_assignment = None  # default='warn'
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-def get_access_token(client_id, client_secret):
+def get_access_token(client_id, client_secret, refresh_token):
     auth_url = "https://www.strava.com/oauth/token"
     payload = {
         'client_id': client_id,
         'client_secret': client_secret,
-        'refresh_token': "312931ab27c4904e31222fc3c4bcb71c9e865736",
+        'refresh_token': refresh_token,
         'grant_type': "refresh_token",
         'f': 'json'
     }
@@ -77,8 +77,9 @@ def main ():
     # to get this info read https://towardsdatascience.com/using-the-strava-api-and-pandas-to-explore-your-activity-data-d94901d9bfde
     client_id = os.getenv("CLIENT_ID")
     client_secret = os.getenv("CLIENT_SECRET")
+    refresh_token = os.getenv("REFRESH_TOKEN")
 
-    access_token = get_access_token(client_id, client_secret)
+    access_token = get_access_token(client_id, client_secret, refresh_token)
 
     activities = get_strava_activities(access_token)
 
