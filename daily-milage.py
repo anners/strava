@@ -74,7 +74,7 @@ def main ():
 
     activities = get_strava_activities(access_token)
 
-    recent_activities = update_activity_table(activities, )
+    recent_activities = update_activity_table(activities)
 
     #print(recent_activities.iloc[:,:-1])
 
